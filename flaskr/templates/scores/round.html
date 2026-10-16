@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ round['course_name'] }}{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <h1>{{ round['course_name'] }}</h1>
+      <p class="text-muted mb-0">Played on {{ round['date_played'] }}</p>
+    </div>
+    <a href="{{ url_for('scores.index') }}" class="btn btn-outline-secondary">Back to My Rounds</a>
+  </div>
+
+  {% if round['notes'] %}
+    <p>{{ round['notes'] }}</p>
+  {% endif %}
+
+  <table class="table table-striped align-middle" style="max-width: 500px;">
+    <thead>
+      <tr>
+        <th>Place</th>
+        <th>Player</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for player in players %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ player['player_name'] }}</td>
+          <td>{{ player['score'] }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

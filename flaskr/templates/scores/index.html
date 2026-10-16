@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}My Rounds{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>My Rounds</h1>
+    <a href="{{ url_for('scores.create') }}" class="btn btn-success">Log a Round</a>
+  </div>
+
+  {% if rounds %}
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Course</th>
+            <th>Players</th>
+            <th>Best Score</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for round in rounds %}
+            <tr>
+              <td>{{ round['date_played'] }}</td>
+              <td>{{ round['course_name'] }}</td>
+              <td>{{ round['player_count'] }}</td>
+              <td>{{ round['best_score'] }}</td>
+              <td class="text-end">
+                <a href="{{ url_for('scores.view', round_id=round['id']) }}" class="btn btn-sm btn-outline-success">View</a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  data-bs-toggle="modal"
+                  data-bs-target="#deleteModal-{{ round['id'] }}"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+
+            <div class="modal fade" id="deleteModal-{{ round['id'] }}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Delete round?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>
+                      Are you sure you want to delete your
+                      {{ round['date_played'] }} round at
+                      <strong>{{ round['course_name'] }}</strong>?
+                      This cannot be undone.
+                    </p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="post" action="{{ url_for('scores.delete', round_id=round['id']) }}">
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p>You haven't logged any rounds yet. <a href="{{ url_for('scores.create') }}">Log your first round</a>.</p>
+  {% endif %}
+{% endblock %}

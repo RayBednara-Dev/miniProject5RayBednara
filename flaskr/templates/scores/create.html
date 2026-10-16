@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Log a Round{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Log a Round</h1>
+
+  <form method="post">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label for="course_name" class="form-label">Course Name</label>
+        <input type="text" class="form-control" id="course_name" name="course_name"
+               value="{{ request.form.get('course_name', '') }}" required autofocus>
+      </div>
+      <div class="col-md-6">
+        <label for="date_played" class="form-label">Date Played</label>
+        <input type="date" class="form-control" id="date_played" name="date_played"
+               value="{{ request.form.get('date_played', '') }}" required>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="my_score" class="form-label">Your Score</label>
+      <input type="number" min="0" class="form-control" id="my_score" name="my_score" style="max-width: 150px;"
+             value="{{ request.form.get('my_score', '') }}" required>
+    </div>
+
+    <hr class="my-4">
+    <h5>Friends (optional, up to 3)</h5>
+    {% for i in range(1, 4) %}
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="friend{{ i }}_name" class="form-label">Friend {{ i }} Name</label>
+          <input type="text" class="form-control" id="friend{{ i }}_name" name="friend{{ i }}_name"
+                 value="{{ request.form.get('friend%d_name' % i, '') }}">
+        </div>
+        <div class="col-md-6">
+          <label for="friend{{ i }}_score" class="form-label">Friend {{ i }} Score</label>
+          <input type="number" min="0" class="form-control" id="friend{{ i }}_score" name="friend{{ i }}_score"
+                 value="{{ request.form.get('friend%d_score' % i, '') }}">
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="mb-3">
+      <label for="notes" class="form-label">Notes (optional)</label>
+      <textarea class="form-control" id="notes" name="notes" rows="2">{{ request.form.get('notes', '') }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Round</button>
+    <a href="{{ url_for('scores.index') }}" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+{% endblock %}
